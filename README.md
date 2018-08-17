@@ -14,7 +14,7 @@ If we find it to be reasonable and verified, we will merge it in.
 ## 1. Normalize the inputs
 
 - normalize the images between -1 and 1
-- Tanh as the last layer of the generator output
+- Tanh as the last layer of the generator output `pass`
 
 ## 2: A modified loss function
 
@@ -23,14 +23,14 @@ In GAN papers, the loss function to optimize G is `min (log 1-D)`, but in practi
   - Goodfellow et. al (2014)
 
 In practice, works well:
-  - Flip labels when training generator: real = fake, fake = real
+  - Flip labels when training generator: real = fake, fake = real `todo`
 
 ## 3: Use a spherical Z
 - Dont sample from a Uniform distribution
 
 ![cube](images/cube.png "Cube")
 
-- Sample from a gaussian distribution
+- Sample from a gaussian distribution `pass: np.random.norm()`
 
 ![sphere](images/sphere.png "Sphere")
 
@@ -47,21 +47,21 @@ In practice, works well:
 
 ## 5: Avoid Sparse Gradients: ReLU, MaxPool
 - the stability of the GAN game suffers if you have sparse gradients
-- LeakyReLU = good (in both G and D)
+- LeakyReLU = good (in both G and D) `pass`
 - For Downsampling, use: Average Pooling, Conv2d + stride
-- For Upsampling, use: PixelShuffle, ConvTranspose2d + stride
+- For Upsampling, use: PixelShuffle, ConvTranspose2d + stride  `UpSampling2D`
   - PixelShuffle: https://arxiv.org/abs/1609.05158
 
 ## 6: Use Soft and Noisy Labels
 
-- Label Smoothing, i.e. if you have two target labels: Real=1 and Fake=0, then for each incoming sample, if it is real, then replace the label with a random number between 0.7 and 1.2, and if it is a fake sample, replace it with 0.0 and 0.3 (for example).
+- Label Smoothing, i.e. if you have two target labels: Real=1 and Fake=0, then for each incoming sample, if it is real, then replace the label with a random number between 0.7 and 1.2, and if it is a fake sample, replace it with 0.0 and 0.3 (for example). `pass`
   - Salimans et. al. 2016
 - make the labels the noisy for the discriminator: occasionally flip the labels when training the discriminator
 
 ## 7: DCGAN / Hybrid Models
 
 - Use DCGAN when you can. It works!
-- if you cant use DCGANs and no model is stable, use a hybrid model :  KL + GAN or VAE + GAN
+- if you cant use DCGANs and no model is stable, use a hybrid model :  KL `sigmoid` + GAN or VAE + GAN
 
 ## 8: Use stability tricks from RL
 
@@ -73,13 +73,13 @@ In practice, works well:
 
 ## 9: Use the ADAM Optimizer
 
-- optim.Adam rules!
+- optim.Adam rules! `sometimes RMSprops?`
   - See Radford et. al. 2015
 - Use SGD for discriminator and ADAM for generator
 
 ## 10: Track failures early
 
-- D loss goes to 0: failure mode
+- D loss goes to 0: failure mode `plot loss is important`
 - check norms of gradients: if they are over 100 things are screwing up
 - when things are working, D loss has low variance and goes down over time vs having huge variance and spiking
 - if loss of generator steadily decreases, then it's fooling D with garbage (says martin)
@@ -121,9 +121,9 @@ while lossG > B:
 
 ## 16: Discrete variables in Conditional GANs
 
-- Use an Embedding layer
-- Add as additional channels to images
-- Keep embedding dimensionality low and upsample to match image channel size
+- Use an Embedding layer `label => embedding`
+- Add as additional channels to images `???`
+- Keep embedding dimensionality low and upsample to match image channel size `???`
 
 ## 17: Use Dropouts in G in both train and test phase
 - Provide noise in the form of dropout (50%).
